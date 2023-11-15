@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsArray,
   IsEmail,
@@ -9,19 +10,23 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
+  @ApiProperty()
   @IsString()
   @MinLength(3)
   name: string;
 
+  @ApiProperty()
   @IsString()
   @MinLength(3)
   @IsOptional()
   lastName: string;
 
+  @ApiProperty()
   @IsString()
   @IsEmail()
   email: string;
 
+  @ApiProperty()
   @IsString()
   @MinLength(6)
   @MaxLength(50)
@@ -31,6 +36,7 @@ export class CreateUserDto {
   })
   phrase: string;
 
+  @ApiPropertyOptional()
   @IsString({ each: true })
   @IsArray()
   @IsOptional()

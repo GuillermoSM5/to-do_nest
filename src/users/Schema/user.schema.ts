@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, now } from 'mongoose';
 export type UserDocument = HydratedDocument<User>;
 
 @Schema()
@@ -18,6 +18,9 @@ export class User {
 
   @Prop()
   phrase: string;
+
+  @Prop({ default: now() })
+  createdAt: Date;
 }
 
-export const UseSchema = SchemaFactory.createForClass(User);
+export const UserSchema = SchemaFactory.createForClass(User);
