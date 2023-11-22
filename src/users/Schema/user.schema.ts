@@ -19,6 +19,9 @@ export class User {
   @Prop()
   phrase: string;
 
+  @Prop({ default: true })
+  active: boolean;
+
   @Prop({ default: now() })
   createdAt: Date;
 }

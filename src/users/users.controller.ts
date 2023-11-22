@@ -17,6 +17,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ActionResponse } from 'src/Shared/models/responses';
+// import { Auth } from 'src/auth/decorators/auth.decorator';
+// import { ValidRoles } from 'src/Shared/utils/enums';
 
 @Controller('users')
 @ApiTags('Users')
@@ -25,6 +27,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  // @Auth(ValidRoles.admin)
   @ApiCreatedResponse({
     type: ActionResponse,
   })

@@ -2,17 +2,23 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 // import { UpdateAuthDto } from './dto/update-auth.dto';
-import { ApiBadRequestResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ActionResponse } from 'src/Shared/models/responses';
 
 @Controller('auth')
 @ApiTags('Auth')
+@ApiBadRequestResponse({ type: ActionResponse })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @ApiCreatedResponse({})
   @ApiOperation({ summary: 'Login in app' })
-  @ApiBadRequestResponse({ type: ActionResponse })
   create(@Body() createAuthDto: CreateAuthDto) {
     return this.authService.create(createAuthDto);
   }
