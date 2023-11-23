@@ -31,20 +31,38 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
+  // findAll() {
+  //   return `This action returns all users`;
+  // }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    const user = await this.userModel
+      .find({ _id: id, active: true })
+      .select(['-__v', '-phrase']);
+    if (user.length === 0) throw new BadRequestException("user don't exist");
+    return user[0];
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.findOne(id);
+    if (user) {
+      await this.userModel.findOneAndUpdate({ _id: id }, { ...updateUserDto });
+    }
+    return new ActionResponse({
+      message: `The user ${user.name} ${user.lastName} has been edit`,
+      content: true,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const user = await this.findOne(id);
+    if (user) {
+      await this.userModel.findOneAndUpdate({ _id: id }, { active: false });
+    }
+    return new ActionResponse({
+      message: `This action removes a ${user.name} ${user.lastName} user`,
+      content: true,
+    });
   }
 }
