@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,6 +21,7 @@ import { ActionResponse } from 'src/Shared/models/responses';
 import { ValidateMongoId } from 'src/Shared/Pipes/ValidationMongoId.pipe';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { ValidRoles } from 'src/Shared/utils/enums';
+import { ActiveUserDto } from './dto/active-user.dto';
 
 @Controller('users')
 @ApiTags('Users')
@@ -59,6 +61,12 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.update(id, updateUserDto);
+  }
+
+  @Put('activeuser')
+  @ApiOperation({ summary: 'Active One User' })
+  activeUser(@Body() activeUser: ActiveUserDto) {
+    return this.usersService.activeUser(activeUser);
   }
 
   @Delete(':id')

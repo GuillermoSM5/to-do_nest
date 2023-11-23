@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -6,6 +10,7 @@ import { User } from './Schema/user.schema';
 import { Model } from 'mongoose';
 import { ActionResponse } from 'src/Shared/models/responses';
 import * as bcrypt from 'bcrypt';
+import { ActiveUserDto } from './dto/active-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -62,6 +67,26 @@ export class UsersService {
     }
     return new ActionResponse({
       message: `This action removes a ${user.name} ${user.lastName} user`,
+      content: true,
+    });
+  }
+
+  async activeUser(activeUser: ActiveUserDto) {
+    const { email, phrase } = activeUser;
+
+    const user = await this.userModel.findOne({ email: email });
+
+    if (!user)
+      throw new UnauthorizedException(
+        'This user never existed. Please create one user',
+      );
+    if (!bcrypt.compareSync(phrase, user.phrase))
+      throw new UnauthorizedException('Credentials are not valid ');
+
+    await this.userModel.findOneAndUpdate({ email }, { active: true });
+
+    return new ActionResponse({
+      message: `Welcome again ${user.name} ${user.lastName}.`,
       content: true,
     });
   }

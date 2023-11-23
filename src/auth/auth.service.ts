@@ -23,7 +23,8 @@ export class AuthService {
     if (!user) throw new UnauthorizedException('Credentials are not valid ');
     if (!bcrypt.compareSync(phrase, user.phrase))
       throw new UnauthorizedException('Credentials are not valid ');
-
+    if (!user.active)
+      throw new UnauthorizedException('Credentials are not valid ');
     //TO-DO return jwt
     return {
       user,
