@@ -8,7 +8,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { ActionResponse } from 'src/Shared/models/responses';
+import { ActionResponse, LoginResponse } from 'src/Shared/models/responses';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -17,7 +17,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  @ApiCreatedResponse({})
+  @ApiCreatedResponse({ type: LoginResponse })
   @ApiOperation({ summary: 'Login in app' })
   create(@Body() createAuthDto: CreateAuthDto) {
     return this.authService.create(createAuthDto);

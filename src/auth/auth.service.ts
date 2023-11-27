@@ -5,6 +5,7 @@ import { User } from 'src/users/Schema/user.schema';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { LoginResponse } from 'src/Shared/models/responses';
 
 @Injectable()
 export class AuthService {
@@ -26,12 +27,18 @@ export class AuthService {
     if (!user.active)
       throw new UnauthorizedException('Credentials are not valid ');
     //TO-DO return jwt
-    return {
-      user,
-      token: await this.jwtService.signAsync({
-        sub: user.id,
-        email: user.email,
-      }),
-    };
+    const userResponse = user.toObject();
+    delete userResponse.phrase;
+
+    return new LoginResponse({
+      message: `Welcome ${user.name} ${user.lastName}`,
+      content: {
+        ...userResponse,
+        token: await this.jwtService.signAsync({
+          sub: user.id,
+          email: user.email,
+        }),
+      },
+    });
   }
 }
