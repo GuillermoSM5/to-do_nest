@@ -3,7 +3,7 @@ import { Types, now } from 'mongoose';
 
 @Schema()
 export class Notes {
-  @Prop({ required: true })
+  @Prop({ required: true, lowercase: true })
   title: string;
 
   @Prop()

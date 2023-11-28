@@ -46,6 +46,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'find one user by Id' })
   @Get(':id')
+  @Auth(ValidRoles.admin)
   findOne(@Param('id', ValidateMongoId) id: string) {
     return this.usersService.findOne(id);
   }
