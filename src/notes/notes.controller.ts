@@ -5,7 +5,7 @@ import {
   Body,
   Patch,
   Param,
-  // Delete,
+  Delete,
 } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
@@ -55,8 +55,10 @@ export class NotesController {
     return this.notesService.update(taskId, userId, updateNoteDto);
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.notesService.remove(+id);
-  // }
+  @ApiOperation({ summary: 'Delete a task' })
+  @Delete(':taskId')
+  @Auth(ValidRoles.user, ValidRoles.admin, ValidRoles.superUser)
+  remove(@Param('taskId', ValidateMongoId) taskId: string) {
+    return this.notesService.remove(taskId);
+  }
 }

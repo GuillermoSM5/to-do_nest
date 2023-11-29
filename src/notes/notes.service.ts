@@ -69,7 +69,18 @@ export class NotesService {
     return new ActionResponse({ content: true, message: 'Task updated' });
   }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} note`;
-  // }
+  async remove(id: string) {
+    const task = await this.notesModel.findById(id);
+
+    if (!task) {
+      throw new BadRequestException('task not found');
+    }
+
+    await this.notesModel.deleteOne({ _id: id });
+
+    return new ActionResponse({
+      content: true,
+      message: 'this task has been eliminated',
+    });
+  }
 }
