@@ -19,8 +19,6 @@ export class UserRoleGuard implements CanActivate {
       ctx.getHandler(),
     );
 
-    console.log(validRoles);
-
     if (!validRoles) return true;
     if (validRoles.length === 0) return true;
 

@@ -1,11 +1,11 @@
 import {
   Controller,
-  Get,
+  // Get,
   Post,
   Body,
   Patch,
   Param,
-  Delete,
+  // Delete,
 } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
@@ -15,6 +15,8 @@ import { ActionResponse } from 'src/Shared/models/responses';
 import { ValidateMongoId } from 'src/Shared/Pipes/ValidationMongoId.pipe';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { ValidRoles } from 'src/Shared/utils/enums';
+import { GetUserId } from 'src/Shared/decorators/get-user.decorator';
+import { Types } from 'mongoose';
 
 @Controller('notes')
 @ApiTags('Notes')
@@ -23,10 +25,10 @@ export class NotesController {
   constructor(private readonly notesService: NotesService) {}
 
   @ApiOperation({ summary: 'Create a task' })
-  @Post(':userId')
+  @Post()
   @Auth(ValidRoles.user, ValidRoles.admin, ValidRoles.superUser)
   create(
-    @Param('userId', ValidateMongoId) userId: string,
+    @GetUserId() userId: Types.ObjectId | undefined,
     @Body() createNoteDto: CreateNoteDto,
   ) {
     return this.notesService.create(userId, createNoteDto);
@@ -42,10 +44,16 @@ export class NotesController {
   //   return this.notesService.findOne(+id);
   // }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
-  //   return this.notesService.update(+id, updateNoteDto);
-  // }
+  @ApiOperation({ summary: 'Edit a task' })
+  @Patch(':taskId')
+  @Auth(ValidRoles.user, ValidRoles.admin, ValidRoles.superUser)
+  update(
+    @GetUserId() userId: Types.ObjectId | undefined,
+    @Param('taskId', ValidateMongoId) taskId: string,
+    @Body() updateNoteDto: UpdateNoteDto,
+  ) {
+    return this.notesService.update(taskId, userId, updateNoteDto);
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {

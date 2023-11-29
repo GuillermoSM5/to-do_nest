@@ -21,7 +21,6 @@ export class AuthGuard implements CanActivate {
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const request = ctx.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    console.log(token);
     if (!token) {
       throw new UnauthorizedException('User is not valid');
     }
@@ -39,7 +38,6 @@ export class AuthGuard implements CanActivate {
       }
       request['user'] = user;
     } catch (error) {
-      console.log(error);
       throw new UnauthorizedException(error.message);
     }
 
